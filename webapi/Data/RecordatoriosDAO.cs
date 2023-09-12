@@ -48,6 +48,32 @@ namespace webapi.Data
             return recordatorios;
         }
 
+        //EDUARDO LARA AYALA
+        internal IEnumerable<Recordatorios> getAll()
+        {
+            List<Recordatorios> recordatorios = new List<Recordatorios>();
+            //var jiji = new AccesoDatos();
+
+            using (var jiji = new AccesoDatos())
+            {
+                jiji.sentencia = "SELECT * FROM RECORDATORIOS";
+                MySqlDataReader reader = (MySqlDataReader)jiji.ejecutarSentencia(TIPOEJECUCIONSQL.CONSULTA);
+
+                while (reader.Read())
+                {
+                    Recordatorios recordatorio = new Recordatorios
+                    {
+                        idRecordatorios = reader.GetUInt64("idrecordatorios"),
+                        notitas_id = (int)(reader.IsDBNull(reader.GetOrdinal("notitas_id")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("notitas_id"))),
+                        fecha_recordatorio = reader.IsDBNull(reader.GetOrdinal("fecha_recordatorio")) ? string.Empty : reader.GetString("fecha_recordatorio"),
+                    };
+                    recordatorios.Add( recordatorio );
+                }
+                
+            }
+            return recordatorios;
+        }
+
 
     }
 }
